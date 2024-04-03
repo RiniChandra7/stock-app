@@ -10,7 +10,7 @@ const SymbolSearch: React.FC = () => {
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const getCurSymbol = useAppSelector(store => store.symbol);
-    const timeInterval = useAppSelector(store => store.timeInterval);
+    //const timeInterval = useAppSelector(store => store.timeInterval);
     const searchInput = useRef<HTMLInputElement>(null);
 
     useEffect(() => {

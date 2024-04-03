@@ -16,19 +16,20 @@ const timeApiCall = async (symbol: string, interval: string): Promise<any> => {
         funcName = MONTH_FUNCTION_NAME;
     }
 
+    let apiAddress: string = "";
     if (funcName == MINUTE_FUNCTION_NAME) {
-        const data = await fetch(API_URL + "function="+ funcName +"&symbol=" +symbol + "&interval=" + interval + "&apikey=" +API_KEY);
-        const json = await data.json();
+        apiAddress = API_URL + "function="+ funcName +"&symbol=" +symbol + "&interval=" + interval + "&apikey=" +API_KEY;
 
-        return json;
     }
     else {
-        const data = await fetch(API_URL + "function="+ funcName +"&symbol=" +symbol + "&apikey=" +API_KEY);
-        const json = await data.json();
-
-        return json;
+        apiAddress = API_URL + "function="+ funcName +"&symbol=" +symbol + "&apikey=" +API_KEY;
     }
-    
+
+    console.log(apiAddress);
+    const data = await fetch(apiAddress);
+    const json = await data.json();
+
+    return json;
 };
 
 export default timeApiCall;
