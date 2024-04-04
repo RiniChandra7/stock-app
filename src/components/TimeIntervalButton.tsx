@@ -7,7 +7,9 @@ interface TimeIntervalButtonProps {
 }
 
 const TimeIntervalButton: React.FC<TimeIntervalButtonProps> = ({ interval, onClick }) => {
+    // Retrieve current selected interval from Redux store
     const curInterval = useAppSelector(store => store.timeInterval.interval);
+    // Determine active button style based on whether the button represents the current selected interval
     const buttonClass = interval === curInterval ? "bg-blue-500" : "bg-gray-800";
 
     return (

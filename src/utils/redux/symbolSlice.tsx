@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { SymbolData } from "../../types/types";
 
+// Define the shape of the symbol-related state
 interface SymbolState {
-    symbolData: SymbolData | null;
-    data1min: any;
-    data5min: any;
-    data15min: any;
-    data30min: any;
-    data60min: any;
-    dataDaily: any;
-    dataWeekly: any;
-    dataMonthly: any;
+    symbolData: SymbolData | null;  // Holds the selected symbol data
+    data1min: any;                  // Time series data for 1-minute interval
+    data5min: any;                  // Time series data for 5-minute interval
+    data15min: any;                 // Time series data for 15-minute interval
+    data30min: any;                 // Time series data for 30-minute interval
+    data60min: any;                 // Time series data for 60-minute interval
+    dataDaily: any;                 // Time series data for daily interval
+    dataWeekly: any;                // Time series data for weekly interval
+    dataMonthly: any;               // Time series data for monthly interval
 }
 
 const initialState: SymbolState = {
@@ -32,6 +33,7 @@ const symbolSlice = createSlice({
         changeSymbol: (state, action) => {
             state.symbolData = action.payload;
         },
+        // Reducer functions to update time series data for different intervals
         setData1min: (state, action) => {
             state.data1min = action.payload;
         },
@@ -56,6 +58,7 @@ const symbolSlice = createSlice({
         setDataMonthly: (state, action) => {
             state.dataMonthly = action.payload;
         },
+        // Reducer function to reset all time series data to null
         resetAllTimeData: (state) => {
             state.data1min = null;
             state.data5min = null;

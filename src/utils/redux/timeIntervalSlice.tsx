@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface TimeState {
-    interval: string;
+    interval: string;  // Holds the selected time interval
 }
 
 const initialState: TimeState = {
-    interval: "",
+    interval: "",  // Initial interval is empty
 };
 
 const timeSlice = createSlice({

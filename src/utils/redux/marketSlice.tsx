@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface MarketState {
-    marketData: any[];
-    currentRegion: any;
+    marketData: any[];   // Array to hold market data
+    currentRegion: any;  // Current region data
 }
 
 const initialState: MarketState = {
-    marketData: [],
-    currentRegion: null
+    marketData: [],      // Initial market data is an empty array
+    currentRegion: null  // Initial current region is null
 };
 
 const marketSlice = createSlice({

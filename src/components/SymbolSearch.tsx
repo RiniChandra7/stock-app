@@ -6,7 +6,7 @@ import { changeSymbol, resetAllTimeData } from "../utils/redux/symbolSlice";
 import { SymbolData } from "../types/types";
 import { setTimeInterval } from "../utils/redux/timeIntervalSlice";
 import swalErrFire from "../utils/swalErrFire";
-import { setCurrentRegion, setMarketData } from "../utils/redux/marketSlice";
+import { setMarketData } from "../utils/redux/marketSlice";
 
 const SymbolSearch: React.FC = () => {
     const [inputValue, setInputValue] = useState<string>("");
@@ -15,10 +15,10 @@ const SymbolSearch: React.FC = () => {
     const dispatch = useAppDispatch();
     const getCurSymbol = useAppSelector(store => store.symbol);
     const marketData = useAppSelector(store => store.market.marketData);
-    //const timeInterval = useAppSelector(store => store.timeInterval);
     const searchInput = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
+        // Set input value based on the currently selected symbol in Redux state
         if (getCurSymbol && getCurSymbol.symbolData) {
             setInputValue(getCurSymbol.symbolData["1. symbol"] || "");
         }
@@ -27,18 +27,21 @@ const SymbolSearch: React.FC = () => {
     const handleSearch = async (): Promise<void> => {
         if (searchInput.current && inputValue.trim() !== '') {
             try {
-                console.log(inputValue.trim());
+                // Perform symbol search based on input value
                 const json = await searchSymbol(inputValue.trim());
                 if (json && json?.bestMatches) {
-                    if (json?.bestMatches.length == 0) {
+                    if (json?.bestMatches.length === 0) {
+                        // Show error message for no search results
                         swalErrFire("No matches found. Please try again with a different search query");
                     }
                     else {
+                        // Display search results as suggestions
                         setSearchResults(json?.bestMatches);
                         setShowSuggestions(true);
                     }
                 }
                 else {
+                    // Handle API response errors
                     setSearchResults([]);
                     setShowSuggestions(false);
                     if (Object.keys(json)[0] == "Information") {
@@ -46,8 +49,8 @@ const SymbolSearch: React.FC = () => {
                         swalErrFire("Rate limit exceeded - API requests are restricted to 25/day. Please try again later, or use this application from a different IP.");
                     }
                 }
-                console.log(json?.bestMatches);
             } catch (error) {
+                // Handle network request failure
                 dispatch(setTimeInterval(""));
                 swalErrFire("Network request failed. Please check your internet connection or proxy.");
                 setSearchResults([]);
@@ -57,27 +60,28 @@ const SymbolSearch: React.FC = () => {
     };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
+        // Update input value on change and hide suggestions
         setInputValue(event.target.value);
-        setShowSuggestions(false); // Hide suggestions when input changes
+        setShowSuggestions(false);
     };
 
     const handleSuggestionClick = async (symbolData: SymbolData): Promise<void> => {
+        // Handle click on search suggestion
         dispatch(resetAllTimeData());
         dispatch(changeSymbol(symbolData));
         dispatch(setTimeInterval(""));
-        setInputValue(symbolData["1. symbol"]); // Update local input value
+        setInputValue(symbolData["1. symbol"]);
         setShowSuggestions(false);
-        console.log(symbolData);
-        console.log(marketData);
 
         if (marketData.length == 0) {
+            // Fetch market data if not already present
             getMarketData()
             .then((json) => {
                 if (Object.keys(json).length > 1 && Object.keys(json)[1] == "markets") {
-                    console.log(json);
                     dispatch(setMarketData(json?.markets));
                 }
                 else {
+                    // Handle API response errors
                     if (Object.keys(json)[0] == "Information") {
                         swalErrFire("Rate limit exceeded - API requests are restricted to 25/day. Please try again later, or use this application from a different IP.");
                     }
@@ -87,13 +91,11 @@ const SymbolSearch: React.FC = () => {
                 }
             })
             .catch((err) => {
+                // Handle network request failure
+                console.log(err);
                 swalErrFire("Network request failed. Please check your internet connection or proxy.");
             });
         }
-        //dispatch(setCurrentRegion(symbolData["4. region"]));
-        //useCurrentMarketData(symbolData);
-
-        
     };
 
     return (

@@ -6,7 +6,7 @@ import { ApexOptions } from 'apexcharts';
 const CandlestickGraph: React.FC = () => {
   const curInterval = useAppSelector(store => store.timeInterval.interval);
   const curSymbol = useAppSelector(store => store.symbol.symbolData?.["1. symbol"]);
-  console.log(curSymbol);
+
   const curData = useAppSelector(store => {
     switch (curInterval) {
       case '1min':
@@ -31,8 +31,7 @@ const CandlestickGraph: React.FC = () => {
   });
   const label = (curSymbol == null || curInterval == "") ? "Search for a valid symbol & click on a time interval to view chart" :`Candlestick Chart for ${curSymbol} - ${curInterval}`;
 
-  console.log(curData);
-
+  // Prepare data for candlestick chart
   const seriesData: { x: string; y: any[]; }[] = [];
   const timestampData: string[] = [];
   const volumeData: number[] = [];
@@ -52,10 +51,7 @@ const CandlestickGraph: React.FC = () => {
     });
   }
 
-  console.log(seriesData);
-  console.log(timestampData);
-  console.log(volumeData);
-
+  // Configure options for the candlestick chart
   const options: ApexOptions = {
     chart: {
       type: 'candlestick',
@@ -81,11 +77,13 @@ const CandlestickGraph: React.FC = () => {
   }
   };
 
+  // Configure options for the volume bar chart
   const volumeSeries = [{
     name: 'Volume',
     data: [...volumeData]
   }];
 
+  // Configure options for the volume bar chart
   const volumeOptions: ApexOptions = {
     chart: {
       type: 'bar',

@@ -14,52 +14,45 @@ const TimeIntervalBtnGroup: React.FC = () => {
     const [lastSymbol, setLastSymbol] = useState<string | null>(null);
     const [lastInterval, setLastInterval] = useState<string | null>(null);
 
+    // Handler for interval button click
     const handleIntervalClick = async (interval: string): Promise<void> => {
-        console.log(interval);
-        
-
+        // Check if a valid symbol is selected and if interval or symbol has changed
         if (symbol != null && (symbol["1. symbol"] !== lastSymbol || interval !== lastInterval)) {
             dispatch(setTimeInterval(interval));
             setLastSymbol(symbol["1. symbol"]);
             setLastInterval(interval);
+
+            // Make API call to fetch data for the selected symbol and interval
             timeApiCall(symbol["1. symbol"], interval)
             .then((json) => {
-                console.log(json);
-                console.log(Object.keys(json).length);
+                // Check if data is retrieved successfully
                 if (Object.keys(json).length > 1) {
                     const keyName = Object.keys(json)[1];
-                    console.log(keyName);
+
+                    // Dispatch the fetched data to the appropriate Redux slice based on interval
                     switch (interval) {
                         case "1min":
-                            console.log("Dispatch fired for 1 min");
                             dispatch(setData1min(json[keyName]));
                             break;
                         case "5min":
-                            console.log("Dispatch fired for 5 min");
                             dispatch(setData5min(json[keyName]));
                             break;
                         case "15min":
-                            console.log("Dispatch fired for 15 min");
                             dispatch(setData15min(json[keyName]));
                             break;
                         case "30min":
-                            console.log("Dispatch fired for 30 min");
                             dispatch(setData30min(json[keyName]));
                             break;
                         case "60min":
-                            console.log("Dispatch fired for 15 min");
                             dispatch(setData60min(json[keyName]));
                             break;
                         case "day":
-                            console.log("Dispatch fired for day");
                             dispatch(setDataDaily(json[keyName]));
                             break;
                         case "week":
-                            console.log("Dispatch fired for week");
                             dispatch(setDataWeekly(json[keyName]));
                             break;
                         case "month":
-                            console.log("Dispatch fired for month");
                             dispatch(setDataMonthly(json[keyName]));
                             break;
                         default:
@@ -67,8 +60,9 @@ const TimeIntervalBtnGroup: React.FC = () => {
                     }
                 }
                 else {
+                    // Handle errors based on API response
                     if (Object.keys(json)[0] == "Error Message") {
-                        swalErrFire('The data for the chosen interval '+interval+" is unavailable for the symbol "+symbol["1. symbol"] + ". Please choose another interval or try another symbol.");
+                        swalErrFire('The data for the chosen interval '+interval+" is unavailable for the symbol "+symbol["1. symbol"] + ". Please choose a larger interval or try another symbol.");
                     }
                     else if (Object.keys(json)[0] == "Information") {
                         swalErrFire("Rate limit exceeded - API requests are restricted to 25/day. Please try again later, or use this application from a different IP.");
@@ -79,13 +73,11 @@ const TimeIntervalBtnGroup: React.FC = () => {
                 swalErrFire("Network request failed. Please check your internet connection or proxy.");
             });
         } 
-        else {
-            swalErrFire("Please search and choose a valid symbol first.");
-        }
     };
 
     return (
         <div className="flex justify-start items-center h-full p-4">
+            {/* Render interval buttons */}
             {intervals.map((interval, index) => (
                 <TimeIntervalButton key={index} interval={interval} onClick={() => handleIntervalClick(interval)} />
             ))}

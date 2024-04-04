@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SymbolData } from "../types/types";
 import { useAppSelector, useAppDispatch } from "../hooks/storeHooks";
 import { setCurrentRegion } from "../utils/redux/marketSlice";
@@ -7,19 +7,24 @@ const MarketDetails: React.FC<{ symbolData: SymbolData }> = ({ symbolData }) => 
     const dispatch = useAppDispatch();
     const getCurSymbol = useAppSelector(store => store.symbol);
     const marketData = useAppSelector(store => store.market.marketData);
-    console.log(marketData);
-    console.log(symbolData);
-    console.log(marketData[0]);
+
+    // Find the matched market based on region from symbolData
     const matchedMarket = marketData.find(obj => symbolData['4. region'].includes(obj.region) || obj.region.includes(symbolData['4. region']));
-    console.log(matchedMarket);
-    dispatch(setCurrentRegion(matchedMarket));
+    //set the current region's market details in the redux store
+    useEffect(() => {
+        if (matchedMarket) {
+            dispatch(setCurrentRegion(matchedMarket));
+        }
+    }, [matchedMarket]);
 
+    // Retrieve the current market region from Redux state
     const currentMarket = useAppSelector(store => store.market.currentRegion);
-    console.log(currentMarket);
 
+    // If currentMarket is not available, return null to prevent rendering
     if (!currentMarket)
-        return;
+        return null;
 
+    // Render market details based on currentMarket
     return (
         <div className="bg-white rounded shadow-md p-4 transition-transform duration-300 transform hover:scale-105 mt-5">
             <div className="text-lg font-bold mb-2">{currentMarket.region} Market</div>

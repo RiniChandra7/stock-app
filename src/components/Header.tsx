@@ -7,7 +7,9 @@ const Header: React.FC = () => {
       <div className="container mx-auto flex items-center justify-between">
         <h1 className="text-white text-2xl font-bold">My Stock Market View</h1>
         <div className="relative">
+          {/* Render the SymbolSearch component for symbol searching */}
           <SymbolSearch />
+          {/* Render a search icon using SVG */}
           <svg
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
