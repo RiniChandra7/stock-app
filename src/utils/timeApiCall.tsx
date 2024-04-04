@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+import swalLoadingFire from './swalLoadingFire';
 import { API_KEY, API_URL, DAY_FUNCTION_NAME, MINUTE_FUNCTION_NAME, MONTH_FUNCTION_NAME, WEEK_FUNCTION_NAME } from "./constants";
 
 // Utility function to make API calls for time series data
@@ -25,9 +27,11 @@ const timeApiCall = async (symbol: string, interval: string): Promise<any> => {
         apiAddress = API_URL + "function="+ funcName +"&symbol=" +symbol + "&apikey=" +API_KEY;
     }
 
+    swalLoadingFire();
     // Fetch data from the constructed API URL
     const data = await fetch(apiAddress);
     const json = await data.json();
+    Swal.close();
 
     return json;
 };
