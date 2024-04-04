@@ -2,6 +2,7 @@ import React from "react";
 import SymbolDetails from './SymbolDetails';
 import { useAppSelector } from "../hooks/storeHooks";
 import TimeIntervalBtnGroup from "./TimeIntervalBtnGroup";
+import CandlestickGraph from "./CandlestickGraph";
 
 const Body: React.FC = () => {
     const symbolData = useAppSelector(store => store.symbol);
@@ -9,10 +10,11 @@ const Body: React.FC = () => {
     return (
         <div className="flex flex-1">
             <div className="flex-1 flex flex-col">
-                <div className="bg-gray-200 h-4/5">
+                <div className="bg-gray-200 flex flex-col">
                     <TimeIntervalBtnGroup />
+                    <CandlestickGraph />
                 </div>
-                <div className="bg-gray-300 h-1/5">
+                <div className="bg-gray-300">
                     First Column - 20%
                 </div>
             </div>

@@ -5,7 +5,7 @@ interface TimeState {
 }
 
 const initialState: TimeState = {
-    interval: "1min",
+    interval: "",
 };
 
 const timeSlice = createSlice({

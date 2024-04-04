@@ -5,7 +5,7 @@ import { AVAILABLE_TIME_INTERVALS } from "../utils/constants";
 import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
 import { setTimeInterval } from "../utils/timeIntervalSlice";
 import timeApiCall from "../utils/timeApiCall";
-import { setData15min, setData1min, setData30min, setData5min, setData60min, setDataDaily, setDataWeekly } from "../utils/symbolSlice";
+import { setData15min, setData1min, setData30min, setData5min, setData60min, setDataDaily, setDataMonthly, setDataWeekly } from "../utils/symbolSlice";
 
 const TimeIntervalBtnGroup: React.FC = () => {
     const intervals = AVAILABLE_TIME_INTERVALS;
@@ -24,6 +24,7 @@ const TimeIntervalBtnGroup: React.FC = () => {
             await timeApiCall(symbol["1. symbol"], interval)
             .then((json) => {
                 console.log(json);
+                console.log(Object.keys(json).length);
                 if (Object.keys(json).length > 1) {
                     const keyName = Object.keys(json)[1];
                     console.log(keyName);
@@ -55,6 +56,10 @@ const TimeIntervalBtnGroup: React.FC = () => {
                         case "week":
                             console.log("Dispatch fired for week");
                             dispatch(setDataWeekly(json[keyName]));
+                            break;
+                        case "month":
+                            console.log("Dispatch fired for month");
+                            dispatch(setDataMonthly(json[keyName]));
                             break;
                         default:
                             break;

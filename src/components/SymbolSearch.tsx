@@ -3,6 +3,8 @@ import searchSymbol from "../utils/searchSymbol";
 import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
 import { changeSymbol } from "../utils/symbolSlice";
 import { SymbolData } from "../types/types";
+import { setTimeInterval } from "../utils/timeIntervalSlice";
+import Swal from "sweetalert2";
 
 const SymbolSearch: React.FC = () => {
     const [inputValue, setInputValue] = useState<string>("");
@@ -24,11 +26,44 @@ const SymbolSearch: React.FC = () => {
             try {
                 console.log(inputValue.trim());
                 const json = await searchSymbol(inputValue.trim());
-                setSearchResults(json?.bestMatches || []);
+                if (json && json?.bestMatches) {
+                    if (json?.bestMatches.length == 0) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: "No matches found. Please try again with a different search query",
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                            })
+                    }
+                    else {
+                        setSearchResults(json?.bestMatches);
+                        setShowSuggestions(true);
+                    }
+                }
+                else {
+                    setSearchResults([]);
+                    setShowSuggestions(false);
+                    if (Object.keys(json)[0] == "Information") {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: "Rate limit exceeded - API requests are restricted to 25/day. Please try again later, or use this application from a different IP.",
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                          })
+                    }
+                }
                 console.log(json?.bestMatches);
-                setShowSuggestions(true);
             } catch (error) {
-                console.error("Error occurred during search:", error);
+                if (error?.toString().includes("Failed to fetch")) {
+                    console.log('Network request failed. Please check your internet connection.');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: "Network request failed. Please check your internet connection.",
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                      })
+                }
+                
                 setSearchResults([]);
                 setShowSuggestions(false);
             }
@@ -42,6 +77,7 @@ const SymbolSearch: React.FC = () => {
 
     const handleSuggestionClick = (symbolData: SymbolData): void => {
         dispatch(changeSymbol(symbolData));
+        dispatch(setTimeInterval(""));
         setInputValue(symbolData["1. symbol"]); // Update local input value
         setShowSuggestions(false);
     };
