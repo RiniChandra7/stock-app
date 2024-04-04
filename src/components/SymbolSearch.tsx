@@ -1,10 +1,12 @@
 import React, { useRef, useState, useEffect, ChangeEvent } from "react";
 import searchSymbol from "../utils/searchSymbol";
+import getMarketData from "../utils/getMarketData";
 import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
-import { changeSymbol, resetAllTimeData } from "../utils/symbolSlice";
+import { changeSymbol, resetAllTimeData } from "../utils/redux/symbolSlice";
 import { SymbolData } from "../types/types";
-import { setTimeInterval } from "../utils/timeIntervalSlice";
+import { setTimeInterval } from "../utils/redux/timeIntervalSlice";
 import swalErrFire from "../utils/swalErrFire";
+import { setCurrentRegion, setMarketData } from "../utils/redux/marketSlice";
 
 const SymbolSearch: React.FC = () => {
     const [inputValue, setInputValue] = useState<string>("");
@@ -12,6 +14,7 @@ const SymbolSearch: React.FC = () => {
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const getCurSymbol = useAppSelector(store => store.symbol);
+    const marketData = useAppSelector(store => store.market.marketData);
     //const timeInterval = useAppSelector(store => store.timeInterval);
     const searchInput = useRef<HTMLInputElement>(null);
 
@@ -58,12 +61,39 @@ const SymbolSearch: React.FC = () => {
         setShowSuggestions(false); // Hide suggestions when input changes
     };
 
-    const handleSuggestionClick = (symbolData: SymbolData): void => {
+    const handleSuggestionClick = async (symbolData: SymbolData): Promise<void> => {
         dispatch(resetAllTimeData());
         dispatch(changeSymbol(symbolData));
         dispatch(setTimeInterval(""));
         setInputValue(symbolData["1. symbol"]); // Update local input value
         setShowSuggestions(false);
+        console.log(symbolData);
+        console.log(marketData);
+
+        if (marketData.length == 0) {
+            getMarketData()
+            .then((json) => {
+                if (Object.keys(json).length > 1 && Object.keys(json)[1] == "markets") {
+                    console.log(json);
+                    dispatch(setMarketData(json?.markets));
+                }
+                else {
+                    if (Object.keys(json)[0] == "Information") {
+                        swalErrFire("Rate limit exceeded - API requests are restricted to 25/day. Please try again later, or use this application from a different IP.");
+                    }
+                    else {
+                        swalErrFire("Network request failed. Please check your internet connection or proxy.");
+                    }
+                }
+            })
+            .catch((err) => {
+                swalErrFire("Network request failed. Please check your internet connection or proxy.");
+            });
+        }
+        //dispatch(setCurrentRegion(symbolData["4. region"]));
+        //useCurrentMarketData(symbolData);
+
+        
     };
 
     return (

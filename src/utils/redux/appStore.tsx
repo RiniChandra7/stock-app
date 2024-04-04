@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import symbolReducer from "./symbolSlice";
 import timeIntervalReducer from "./timeIntervalSlice";
+import marketReducer from "./marketSlice";
 
 const appStore = configureStore({
     reducer: {
         symbol: symbolReducer,
-        timeInterval: timeIntervalReducer
+        timeInterval: timeIntervalReducer,
+        market: marketReducer
     }
 });
 

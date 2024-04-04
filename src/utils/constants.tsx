@@ -10,6 +10,8 @@ export const WEEK_FUNCTION_NAME: string = "TIME_SERIES_WEEKLY";
 
 export const MONTH_FUNCTION_NAME: string = "TIME_SERIES_MONTHLY";
 
+export const MARKET_FUNCTION_NAME: string = "MARKET_STATUS";
+
 export const AVAILABLE_TIME_INTERVALS: string[] = [
     "1min",
     "5min",

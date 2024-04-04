@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { SymbolData } from "../types/types";
+import { SymbolData } from "../../types/types";
 
 interface SymbolState {
     symbolData: SymbolData | null;

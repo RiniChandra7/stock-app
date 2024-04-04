@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import TimeIntervalButton from "./TimeIntervalButton";
 import { AVAILABLE_TIME_INTERVALS } from "../utils/constants";
 import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
-import { setTimeInterval } from "../utils/timeIntervalSlice";
+import { setTimeInterval } from "../utils/redux/timeIntervalSlice";
 import timeApiCall from "../utils/timeApiCall";
 import swalErrFire from "../utils/swalErrFire";
-import { setData15min, setData1min, setData30min, setData5min, setData60min, setDataDaily, setDataMonthly, setDataWeekly } from "../utils/symbolSlice";
+import { setData15min, setData1min, setData30min, setData5min, setData60min, setDataDaily, setDataMonthly, setDataWeekly } from "../utils/redux/symbolSlice";
 
 const TimeIntervalBtnGroup: React.FC = () => {
     const intervals = AVAILABLE_TIME_INTERVALS;
