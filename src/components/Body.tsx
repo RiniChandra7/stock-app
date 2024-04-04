@@ -16,7 +16,7 @@ const Body: React.FC = () => {
                 </div>
             </div>
             
-            <div className="w-1/5 bg-gray-400">
+            <div className="w-1/5 bg-gray-100 p-4">
                 {
                     symbolData.symbolData ? 
                         <SymbolDetails symbolData={symbolData.symbolData} /> : 

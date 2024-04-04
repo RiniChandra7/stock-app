@@ -39,11 +39,13 @@ const SymbolSearch: React.FC = () => {
                     setSearchResults([]);
                     setShowSuggestions(false);
                     if (Object.keys(json)[0] == "Information") {
+                        dispatch(setTimeInterval(""));
                         swalErrFire("Rate limit exceeded - API requests are restricted to 25/day. Please try again later, or use this application from a different IP.");
                     }
                 }
                 console.log(json?.bestMatches);
             } catch (error) {
+                dispatch(setTimeInterval(""));
                 swalErrFire("Network request failed. Please check your internet connection or proxy.");
                 setSearchResults([]);
                 setShowSuggestions(false);

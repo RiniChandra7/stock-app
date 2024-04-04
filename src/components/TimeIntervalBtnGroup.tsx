@@ -16,9 +16,10 @@ const TimeIntervalBtnGroup: React.FC = () => {
 
     const handleIntervalClick = async (interval: string): Promise<void> => {
         console.log(interval);
-        dispatch(setTimeInterval(interval));
+        
 
         if (symbol != null && (symbol["1. symbol"] !== lastSymbol || interval !== lastInterval)) {
+            dispatch(setTimeInterval(interval));
             setLastSymbol(symbol["1. symbol"]);
             setLastInterval(interval);
             timeApiCall(symbol["1. symbol"], interval)
@@ -78,6 +79,9 @@ const TimeIntervalBtnGroup: React.FC = () => {
                 swalErrFire("Network request failed. Please check your internet connection or proxy.");
             });
         } 
+        else {
+            swalErrFire("Please search and choose a valid symbol first.");
+        }
     };
 
     return (
