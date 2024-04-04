@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Swal from 'sweetalert2';
 import TimeIntervalButton from "./TimeIntervalButton";
 import { AVAILABLE_TIME_INTERVALS } from "../utils/constants";
 import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
 import { setTimeInterval } from "../utils/timeIntervalSlice";
 import timeApiCall from "../utils/timeApiCall";
+import swalErrFire from "../utils/swalErrFire";
 import { setData15min, setData1min, setData30min, setData5min, setData60min, setDataDaily, setDataMonthly, setDataWeekly } from "../utils/symbolSlice";
 
 const TimeIntervalBtnGroup: React.FC = () => {
@@ -21,7 +21,7 @@ const TimeIntervalBtnGroup: React.FC = () => {
         if (symbol != null && (symbol["1. symbol"] !== lastSymbol || interval !== lastInterval)) {
             setLastSymbol(symbol["1. symbol"]);
             setLastInterval(interval);
-            await timeApiCall(symbol["1. symbol"], interval)
+            timeApiCall(symbol["1. symbol"], interval)
             .then((json) => {
                 console.log(json);
                 console.log(Object.keys(json).length);
@@ -67,16 +67,16 @@ const TimeIntervalBtnGroup: React.FC = () => {
                 }
                 else {
                     if (Object.keys(json)[0] == "Error Message") {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'The data for the chosen interval '+interval+" is unavailable for the symbol "+symbol["1. symbol"] + ". Please choose another interval or try another symbol.",
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                          })
+                        swalErrFire('The data for the chosen interval '+interval+" is unavailable for the symbol "+symbol["1. symbol"] + ". Please choose another interval or try another symbol.");
+                    }
+                    else if (Object.keys(json)[0] == "Information") {
+                        swalErrFire("Rate limit exceeded - API requests are restricted to 25/day. Please try again later, or use this application from a different IP.");
                     }
                 }
             })
-            
+            .catch((err) => {
+                swalErrFire("Network request failed. Please check your internet connection or proxy.");
+            });
         } 
     };
 

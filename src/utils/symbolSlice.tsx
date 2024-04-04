@@ -56,9 +56,19 @@ const symbolSlice = createSlice({
         setDataMonthly: (state, action) => {
             state.dataMonthly = action.payload;
         },
+        resetAllTimeData: (state) => {
+            state.data1min = null;
+            state.data5min = null;
+            state.data15min = null;
+            state.data30min = null;
+            state.data60min = null;
+            state.dataDaily = null;
+            state.dataWeekly = null;
+            state.dataMonthly = null;
+        }
     }
 });
 
-export const { changeSymbol, setData1min, setData5min, setData15min, setData30min, setData60min, setDataDaily, setDataWeekly, setDataMonthly } = symbolSlice.actions;
+export const { changeSymbol, setData1min, setData5min, setData15min, setData30min, setData60min, setDataDaily, setDataWeekly, setDataMonthly, resetAllTimeData } = symbolSlice.actions;
 
 export default symbolSlice.reducer;

@@ -33,7 +33,9 @@ const CandlestickGraph: React.FC = () => {
 
   console.log(curData);
 
-  const seriesData: any = [];
+  const seriesData: { x: string; y: any[]; }[] = [];
+  const timestampData: string[] = [];
+  const volumeData: number[] = [];
   if (curData) {
     Object.entries(curData).map(([key, value]: [string, any]) => {
       seriesData.push({
@@ -45,10 +47,14 @@ const CandlestickGraph: React.FC = () => {
           value['4. close'],
         ],
       });
+      timestampData.push(key);
+      volumeData.push(parseFloat(value['5. volume']));
     });
   }
 
   console.log(seriesData);
+  console.log(timestampData);
+  console.log(volumeData);
 
   const options: ApexOptions = {
     chart: {
@@ -75,6 +81,46 @@ const CandlestickGraph: React.FC = () => {
   }
   };
 
+  const volumeSeries = [{
+    name: 'Volume',
+    data: [...volumeData]
+  }];
+
+  const volumeOptions: ApexOptions = {
+    chart: {
+      type: 'bar',
+      height: 150
+    },
+    plotOptions: {
+      bar: {
+        columnWidth: '80%',
+      }
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    yaxis: {
+      title: {
+        text: 'Volume',
+      },
+      labels: {
+        formatter: function (y) {
+          return y.toFixed(0);
+        }
+      }
+    },
+    xaxis: {
+      type: 'datetime',
+      categories: [
+        ...timestampData
+      ],
+      labels: {
+        rotate: -90
+      }
+    },
+};
+
+
   return (
       <div id="chart">
         <ReactApexChart 
@@ -89,6 +135,7 @@ const CandlestickGraph: React.FC = () => {
           height={350}
           type="candlestick"
           />
+          <ReactApexChart options={volumeOptions} series={volumeSeries} type="bar" height={200} />
       </div>
   );
 };

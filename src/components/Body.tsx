@@ -14,9 +14,6 @@ const Body: React.FC = () => {
                     <TimeIntervalBtnGroup />
                     <CandlestickGraph />
                 </div>
-                <div className="bg-gray-300">
-                    First Column - 20%
-                </div>
             </div>
             
             <div className="w-1/5 bg-gray-400">
